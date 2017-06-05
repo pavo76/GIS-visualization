@@ -6,7 +6,60 @@
 @Scripts.Render("~/bundles/jquery")
 <script src="http://code.jquerygeo.com/jquery.geo-1.0.0-rc1.1.min.js"></script>
 <script>
-  $(function() {
-    $( "#map" ).geomap( );
-  });
+    $(function () {
+        // create a map centered on Naga
+        // style the shape points
+        var map = $("#map").geomap({
+            center: [15, 45],
+            zoom: 10,
+            shapeStyle: {
+                color: "#444",
+                width: 12,
+                height: 12
+            },
+            move: function (e, geo) {
+                // search for a monument under the cursor
+                var monument = map.geomap("find", geo, 12);
+                if (monument.length > 0) {
+                    // if found, show its label
+                    $("." + monument[0].properties.id).closest(".geo-label").show();
+                } else {
+                    // otherwise, hide all labels
+                    $(".geo-label").hide();
+                }
+            }
+        });
+
+        // two monument GeoJSON Features
+        var monuments = [{
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [15, 45]
+            },
+            properties: {
+                id: 1,
+                name: "Label1"
+            }
+        }, {
+            type: "Feature",
+            geometry: {
+                type: "Point",
+                coordinates: [16,45.5555]
+            },
+            properties: {
+                id: 2,
+                name: "Label2"
+            }
+        }];
+
+        $.each(monuments, function () {
+            // label has a class that matches the monument's id
+            // false (at the end) stops jQuery Geo from trying to refresh after each append
+            map.geomap("append", this, '<span class="' + this.properties.id + '">' + this.properties.name + '</span>', false);
+        });
+
+        // we're done appending, refresh the map
+        map.geomap("refresh");
+    });
 </script>
