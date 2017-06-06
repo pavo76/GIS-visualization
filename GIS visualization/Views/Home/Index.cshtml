@@ -10,19 +10,19 @@
         // create a map centered on Naga
         // style the shape points
         var map = $("#map").geomap({
-            center: [15, 45],
+            center: [15.587336666667, 45.484296666667],
             zoom: 10,
             shapeStyle: {
-                color: "#444",
+                color: "#d00",
                 width: 12,
                 height: 12
             },
             move: function (e, geo) {
                 // search for a monument under the cursor
-                var monument = map.geomap("find", geo, 12);
-                if (monument.length > 0) {
+                var point = map.geomap("find", geo, 12);
+                if (point.length > 0) {
                     // if found, show its label
-                    $("." + monument[0].properties.id).closest(".geo-label").show();
+                    $("." + point[0].properties.id).closest(".geo-label").show();
                 } else {
                     // otherwise, hide all labels
                     $(".geo-label").hide();
@@ -31,15 +31,15 @@
         });
 
         // two monument GeoJSON Features
-        var monuments = [{
+        var points = [{
             type: "Feature",
             geometry: {
                 type: "Point",
-                coordinates: [15, 45]
+                coordinates: [15.587336666667, 45.484296666667]
             },
             properties: {
                 id: 1,
-                name: "Label1"
+                content: "<p>Test za sliku i tekst</p><img src='https://slike.geek.hr/wp-content/uploads/sites/10/store/mali-zec-slika.jpg' width=200px height=200px/>"
             }
         }, {
             type: "Feature",
@@ -49,14 +49,14 @@
             },
             properties: {
                 id: 2,
-                name: "Label2"
+                content: "Label2"
             }
         }];
 
-        $.each(monuments, function () {
+        $.each(points, function () {
             // label has a class that matches the monument's id
             // false (at the end) stops jQuery Geo from trying to refresh after each append
-            map.geomap("append", this, '<span class="' + this.properties.id + '">' + this.properties.name + '</span>', false);
+            map.geomap("append", this, '<div class="' + this.properties.id + '">' + this.properties.content + '</div>', false);
         });
 
         // we're done appending, refresh the map
