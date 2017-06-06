@@ -1,0 +1,71 @@
+﻿@model IEnumerable<GIS_visualization.Models.Image>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="map" style="width:1000px; height: 600px;"></div>
+<br />
+<div>
+    @Html.ActionLink("Back to List", "Index", new { })
+</div>
+@Scripts.Render("~/bundles/jquery")
+<script src="http://code.jquerygeo.com/jquery.geo-1.0.0-rc1.1.min.js"></script>
+<script>
+    $(function () {
+        // create a map centered on Naga
+        // style the shape points
+        var map = $("#map").geomap({
+            center: [15.95, 45.82],
+            zoom: 13,
+            shapeStyle: {
+                color: "#d00",
+                width: 12,
+                height: 12
+            },
+            move: function (e, geo) {
+                // search for a monument under the cursor
+                var point = map.geomap("find", geo, 12);
+                if (point.length > 0) {
+                    // if found, show its label
+                    $("." + point[0].properties.id).closest(".geo-label").show();
+                } else {
+                    // otherwise, hide all labels
+                    $(".geo-label").hide();
+                }
+            }
+        });
+
+        @{ foreach (var item in Model)
+            {
+                <text>
+                var points = [{
+                    type: "Feature",
+                    geometry:
+                    {
+                        type: "Point",
+                        coordinates: [@item.Longitude, @item.Latitude]
+                    },
+                    properties:
+                    {
+                        id: @item.Id,
+                        content: "@item.Title<br/>Fotograf: @item.Author<br/>@item.Date<br/>@item.Type<br/>inv. ozn. @item.InventoryMark<br/><img src='~/Images/@item.src' width=200px height=200px/>"
+                    }
+                }
+                ];
+
+                $.each(points, function() {
+                            // label has a class that matches the monument's id
+                            // false (at the end) stops jQuery Geo from trying to refresh after each append
+                            map.geomap("append", this, '<div class="' + this.properties.id + '">' + this.properties.content + '</div>', false);
+                });
+                </text>
+            }
+        }
+                    
+
+            // we're done appending, refresh the map
+            map.geomap("refresh");
+    });
+</script>

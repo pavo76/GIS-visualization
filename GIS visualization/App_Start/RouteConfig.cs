@@ -18,6 +18,13 @@ namespace GIS_visualization
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
+
+            routes.MapRoute(
+                name: "Images",
+                url: "{controller}/{action}/{id}",
+                defaults: new { controller = "Images", action = "Index", id = UrlParameter.Optional }
+            );
+
         }
     }
 }
