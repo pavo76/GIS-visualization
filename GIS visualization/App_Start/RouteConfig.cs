@@ -14,16 +14,24 @@ namespace GIS_visualization
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "ImagesTest",
+                url: "Images/index",
+                defaults: new { controller = "Images", action = "Index" }
+            );
+
+            routes.MapRoute(
+                name: "Images",
+                url: "Images/{action}/{id}",
+                defaults: new { controller = "Images", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
-            routes.MapRoute(
-                name: "Images",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Images", action = "Index", id = UrlParameter.Optional }
-            );
+            
 
         }
     }
